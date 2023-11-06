@@ -20,17 +20,17 @@ app.get('/', (req, res) => {
     res.set('Content-Type', 'text/html');
     res.send('Hello world !!');
 });
-app.get('/user', userController.userCtrl.get_all);
-app.get('/user/:user_id', userController.userCtrl.get);
-app.post('/user', userController.userCtrl.create);
-app.put('/user/:user_id', userController.userCtrl.update);
-app.delete('/user/:user_id', userController.userCtrl.delete);
+app.get('/api/users', userController.userCtrl.get_all);
+app.get('/api/users/:user_id', userController.userCtrl.get);
+app.post('/api/users', userController.userCtrl.create);
+app.put('/api/users/:user_id', userController.userCtrl.update);
+app.delete('/api/users/:user_id', userController.userCtrl.delete);
 
-app.get('/user/:user_id/mailAddress', maillingController.mailingCtrl.get_all);
-app.get('/user/:user_id/mailAddress/:mailing_address_id', maillingController.mailingCtrl.get);
-app.post('/user/:user_id/mailAddress',maillingController.mailingCtrl.create)
-app.put('/user/:user_id/mailAddress/:mailing_address_id',maillingController.mailingCtrl.update)
-app.delete('/user/:user_id/mailAddress/:mailing_address_id ',maillingController.mailingCtrl.delete)
+app.get('/api/users/:user_id/mailAddress', maillingController.mailingCtrl.get_all);
+app.get('/api/users/:user_id/mailAddress/:mailing_address_id', maillingController.mailingCtrl.get);
+app.post('/api/users/:user_id/mailAddress',maillingController.mailingCtrl.create)
+app.put('/api/users/:user_id/mailAddress/:mailing_address_id',maillingController.mailingCtrl.update)
+app.delete('/api/users/:user_id/mailAddress/:mailing_address_id',maillingController.mailingCtrl.delete)
 
 app.listen(port, () => {
     console.log('Server app listening on port ' + port);
