@@ -85,19 +85,4 @@ module.exports = {
             res.status(500).send(error);
         }
     },
-    getAllByUserId: (req, res, next) => {
-        let whereClause = {
-            userId: req.params.user_id
-        };
-
-        if (req.query.label) {
-            whereClause.label = req.query.label;
-        }
-
-        return db.Address.findAll({
-            where: whereClause
-        })
-            .then((addresses) => res.json(addresses))
-            .catch(next);
-    }
 };
