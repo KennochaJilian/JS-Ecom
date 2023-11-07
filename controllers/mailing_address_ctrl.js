@@ -19,29 +19,19 @@ module.exports = {
         }
     },
 
-    get(req, res) {
-        try {
-            db.MailingAddress.findAll({
-                where: {
-                    id: req.params.mailing_address_id,
-                    UserId: req.params.user_id
-                  }
-            }).then(x => {
-                if(x.length === 0){
-                    res.status(404).send('Not allowed');
-                }else{
-                    res.status(200).json(x);
-                }
-            });
-        } catch (error) {
-            res.status(500).send(error);
-        }
+    async get(req, res) {
+            const user = await db.User.findByPk(req.params.user_id);
+            if(!user){
+                res.status(404).send('User not found');
+            }
+            const addresses = await user.getMailingAddresses();
+            res.status(200).send(addresses)
+
     },
 
     async create(req, res) {
         try {
             const user = await db.User.findByPk(req.params.user_id);
-            console.log(user);
             if(!user){
                 res.status(404).json('User not found');
             }

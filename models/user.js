@@ -4,7 +4,9 @@ module.exports = sequelize => {
 
     class User extends Sequelize.Model {
         static associate(db) {
-            User.hasMany(db.MailingAddress);
+            User.hasMany(db.MailingAddress, {onDelete: 'CASCADE'});
+            User.hasMany(db.PaymentMethod, {onDelete: 'CASCADE'});
+            User.hasMany(db.Phone, {onDelete: 'CASCADE'});
         };
     }
 
