@@ -67,6 +67,10 @@ module.exports  = {
             res.status(500).send(error);
         }
     },
+    async getRoles(req,res){
+      const roles =  await req.user.getRoles();
+      res.status(200).json(roles);
+    },
     load_by_id: (req, res, next) => {
         db.User.findByPk(req.params.user_id).then(user => {
             req.user = user;

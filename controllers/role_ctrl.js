@@ -65,5 +65,20 @@ module.exports  = {
         } catch (error) {
             res.status(500).send(error);
         }
+    },
+    async getUsers(req,res){
+        try {
+            console.log(req.params.role_id)
+            const role = await db.Role.findByPk(req.params.role_id);
+            if (role) {
+                const users = role.getUsers();
+                res.status(200).json(users);
+            } else {
+                res.status(404).send('role not found');
+            }
+        } catch (error) {
+            res.status(500).send(error);
+        }
+
     }
 };

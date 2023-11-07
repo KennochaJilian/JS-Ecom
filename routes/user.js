@@ -27,5 +27,10 @@ module.exports = [
         method: 'delete',
         func: user_ctrl.delete
     },
+    {
+        url: '/api/users/:user_id/roles',
+        method: 'get',
+        func: [user_ctrl.load_by_id, user_ctrl.getRoles]
+    }
 
 ];
