@@ -31,6 +31,11 @@ module.exports = [
         url: '/api/users/:user_id/roles',
         method: 'get',
         func: [user_ctrl.load_by_id, user_ctrl.getRoles]
+    },
+    {
+        url: '/api/users/:user_id/group/:role_id',
+        method: 'post',
+        func: [user_ctrl.load_by_id, user_ctrl.addRole]
     }
 
 ];

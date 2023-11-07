@@ -71,6 +71,21 @@ module.exports  = {
       const roles =  await req.user.getRoles();
       res.status(200).json(roles);
     },
+
+    async addRole(req, res){
+        try {
+            const role = await db.Role.findByPk(req.params.role_id);
+            if (role) {
+                req.user.addRole(role);
+                res.status(200).json(req.user);
+            } else {
+                res.status(404).send('Role not found');
+            }
+        } catch (error) {
+            res.status(500).send(error);
+        }
+    },
+
     load_by_id: (req, res, next) => {
         db.User.findByPk(req.params.user_id).then(user => {
             req.user = user;
