@@ -1,6 +1,6 @@
-const db = require('./db');
+const db = require('../models');
 
-const userCtrl = {
+module.exports  = {
     async get_all(req, res) {
         try {
             const users = await db.User.findAll();
@@ -12,6 +12,7 @@ const userCtrl = {
 
     async get(req, res) {
         try {
+            console.log(req.params.user_id)
             const user = await db.User.findByPk(req.params.user_id);
             if (user) {
                 res.status(200).json(user);
@@ -67,5 +68,3 @@ const userCtrl = {
         }
     }
 };
-
-module.exports = { userCtrl };

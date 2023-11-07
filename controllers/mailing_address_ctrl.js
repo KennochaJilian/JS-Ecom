@@ -1,6 +1,6 @@
-const db = require('./db');
+const db = require('../models');
 
-const mailingCtrl = {
+module.exports = {
     get_all(req, res) {
         try {
             db.MailingAddress.findAll({
@@ -40,9 +40,14 @@ const mailingCtrl = {
 
     async create(req, res) {
         try {
-            const mailingAddr = req.body;
-            mailingAddr.UserId = req.params.user_id;
-            const addr = db.MailingAddress.create(mailingAddr)
+            const user = await db.User.findByPk(req.params.user_id);
+            console.log(user);
+            if(!user){
+                res.status(404).json('User not found');
+            }
+            const addr = await db.MailingAddress.create(req.body)
+            await user.addMailingAddresses(addr);
+
             res.status(201).json(addr);
         } catch (error) {
             res.status(500).send(error);
@@ -58,10 +63,10 @@ const mailingCtrl = {
                 }
             });
             if (updated) {
-                const user = await db.MailingAddress.findByPk(req.params.user_id);
-                res.status(200).json(user);
+                const addr = await db.MailingAddress.findByPk(req.params.user_id);
+                res.status(200).json(addr);
             } else {
-                res.status(404).send('User not found');
+                res.status(404).send('Address not found');
             }
         } catch (error) {
             res.status(500).send(error);
@@ -86,5 +91,3 @@ const mailingCtrl = {
         }
     }
 };
-
-module.exports = { mailingCtrl };
