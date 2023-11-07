@@ -66,5 +66,11 @@ module.exports  = {
         } catch (error) {
             res.status(500).send(error);
         }
+    },
+    load_by_id: (req, res, next) => {
+        db.User.findByPk(req.params.user_id).then(user => {
+            req.user = user;
+            next();
+        }).catch(next);
     }
 };

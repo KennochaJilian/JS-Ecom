@@ -4,7 +4,7 @@ module.exports = {
     get_all(req, res) {
         try {
             let whereClause = {
-                userId: req.params.user_id
+                userId: req.user.id
             };
             if (req.query.label) {
                 whereClause.label = req.query.label;
@@ -25,23 +25,21 @@ module.exports = {
     },
 
     async get(req, res) {
-            const user = await db.User.findByPk(req.params.user_id);
-            if(!user){
+            if(!req.user){
                 res.status(404).send('User not found');
             }
-            const addresses = await user.getMailingAddresses();
+            const addresses = await req.user.getMailingAddresses();
             res.status(200).send(addresses)
 
     },
 
     async create(req, res) {
         try {
-            const user = await db.User.findByPk(req.params.user_id);
-            if(!user){
+            if(!req.user){
                 res.status(404).json('User not found');
             }
             const addr = await db.MailingAddress.create(req.body)
-            await user.addMailingAddresses(addr);
+            await req.user.addMailingAddresses(addr);
 
             res.status(201).json(addr);
         } catch (error) {
@@ -53,12 +51,12 @@ module.exports = {
         try {
             const [updated] = await db.MailingAddress.update(req.body, {
                 where: {
-                    UserId: req.params.user_id,
+                    UserId: req.user.id,
                     id: req.params.mailing_address_id,
                 }
             });
             if (updated) {
-                const addr = await db.MailingAddress.findByPk(req.params.user_id);
+                const addr = await db.MailingAddress.findByPk(req.user.id);
                 res.status(200).json(addr);
             } else {
                 res.status(404).send('Address not found');
@@ -72,12 +70,12 @@ module.exports = {
         try {
             const deleted = await db.MailingAddress.destroy({
                 where: {
-                    UserId: req.params.user_id,
+                    UserId: req.user.id,
                     id: req.params.mailing_address_id,
                 }
             });
             if (deleted) {
-                res.status(200).send(`Adress ${req.params.user_id} successfully deleted`);
+                res.status(200).send(`Adress ${req.user.id} successfully deleted`);
             } else {
                 res.status(404).send('Address not found');
             }
