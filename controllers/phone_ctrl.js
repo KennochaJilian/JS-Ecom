@@ -9,12 +9,11 @@ module.exports = {
             if (req.query.label) {
                 whereClause.label = req.query.label;
             }
-
-            db.MailingAddress.findAll({
+            db.Phone.findAll({
                 where: whereClause
             }).then(x => {
                 if(x.length === 0){
-                    res.status(404).send('No mailling address found');
+                    res.status(404).send('No phone found');
                 }else{
                     res.status(200).json(x);
                 }
@@ -29,7 +28,7 @@ module.exports = {
             if(!user){
                 res.status(404).send('User not found');
             }
-            const addresses = await user.getMailingAddresses();
+            const addresses = await user.getPhones();
             res.status(200).send(addresses)
 
     },
@@ -40,10 +39,10 @@ module.exports = {
             if(!user){
                 res.status(404).json('User not found');
             }
-            const addr = await db.MailingAddress.create(req.body)
-            await user.addMailingAddresses(addr);
+            const phone = await db.Phone.create(req.body)
+            await user.addPhones(phone);
 
-            res.status(201).json(addr);
+            res.status(201).json(phone);
         } catch (error) {
             res.status(500).send(error);
         }
@@ -51,17 +50,17 @@ module.exports = {
 
     async update(req, res) {
         try {
-            const [updated] = await db.MailingAddress.update(req.body, {
+            const [updated] = await db.Phone.update(req.body, {
                 where: {
                     UserId: req.params.user_id,
-                    id: req.params.mailing_address_id,
+                    id: req.params.phone_id,
                 }
             });
             if (updated) {
-                const addr = await db.MailingAddress.findByPk(req.params.user_id);
-                res.status(200).json(addr);
+                const phone = await db.Phone.findByPk(req.params.user_id);
+                res.status(200).json(phone);
             } else {
-                res.status(404).send('Address not found');
+                res.status(404).send('Phone not found');
             }
         } catch (error) {
             res.status(500).send(error);
@@ -70,34 +69,19 @@ module.exports = {
 
     async delete(req, res) {
         try {
-            const deleted = await db.MailingAddress.destroy({
+            const deleted = await db.Phone.destroy({
                 where: {
                     UserId: req.params.user_id,
-                    id: req.params.mailing_address_id,
+                    id: req.params.phone_id,
                 }
             });
             if (deleted) {
-                res.status(200).send(`Adress ${req.params.user_id} successfully deleted`);
+                res.status(200).send(`Phone ${req.params.phone_id} successfully deleted`);
             } else {
-                res.status(404).send('Address not found');
+                res.status(404).send('Phone not found');
             }
         } catch (error) {
             res.status(500).send(error);
         }
-    },
-    getAllByUserId: (req, res, next) => {
-        let whereClause = {
-            userId: req.params.user_id
-        };
-
-        if (req.query.label) {
-            whereClause.label = req.query.label;
-        }
-
-        return db.Address.findAll({
-            where: whereClause
-        })
-            .then((addresses) => res.json(addresses))
-            .catch(next);
     }
 };
