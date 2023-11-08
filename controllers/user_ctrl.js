@@ -120,6 +120,9 @@ module.exports  = {
                     emailAddress: user.emailAddress
                 }
             })
+            if(!dbUser){
+                res.status(401).send('User not found')
+            }
 
             if(!hashHelper.compare(user.password, dbUser.password)){
                 res.status(401).json("Wrong password or email")
