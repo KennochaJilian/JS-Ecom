@@ -1,4 +1,6 @@
 const db = require('../models');
+const hashHelper = require('../helpers/password-helper')
+const jwt = require('../helpers/jwt-helper');
 
 module.exports  = {
     async get_all(req, res) {
@@ -85,7 +87,35 @@ module.exports  = {
             res.status(500).send(error);
         }
     },
+    signup: async (req, res, next) => {
+        try {
+            const user = req.body;
+            user.password = hashHelper.hashPass(user.password, 10);
+            const newUser = await db.User.create(user);
+            res.status(201).json(newUser);
+        } catch (error) {
+            res.status(500).send(error);
+        }
+    },
+    signIn: async (req, res, next) => {
+        try {
+            const user = req.body;
+            console.log(user);
+            const dbUser = await db.User.findOne({
+                where: {
+                    emailAddress: user.emailAddress
+                }
+            })
 
+            if(!hashHelper.compare(user.password, dbUser.password)){
+                res.status(401).json("Wrong password or email")
+            }
+            const token = jwt.sign(dbUser)
+            res.status(200).json(token);
+        } catch (error) {
+            res.status(500).send(error);
+        }
+    },
     load_by_id: (req, res, next) => {
         db.User.findByPk(req.params.user_id).then(user => {
             req.user = user;

@@ -18,6 +18,16 @@ module.exports = [
         func: user_ctrl.create
     },
     {
+        url: '/api/users/signup',
+        method: 'post',
+        func: user_ctrl.signup
+    },
+    {
+        url: '/api/users/signIn',
+        method: 'post',
+        func: user_ctrl.signIn
+    },
+    {
         url: '/api/users/:user_id',
         method: 'put',
         func: user_ctrl.update

@@ -1,4 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
+const PROTECTED_ATTRIBUTES = ['password']
 
 module.exports = sequelize => {
 
@@ -9,6 +10,14 @@ module.exports = sequelize => {
             User.hasMany(db.Phone, {onDelete: 'CASCADE'});
             User.belongsToMany(db.Role, {through: 'Users_Roles'})
         };
+        toJSON () {
+            // hide protected fields
+            let attributes = Object.assign({}, this.get())
+            for (let a of PROTECTED_ATTRIBUTES) {
+                delete attributes[a]
+            }
+            return attributes
+        }
     }
 
     User.init({
