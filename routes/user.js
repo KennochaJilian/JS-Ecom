@@ -30,12 +30,12 @@ module.exports = [
     {
         url: '/api/users/:user_id',
         method: 'put',
-        func: user_ctrl.update
+        func: [user_ctrl.load_by_id,user_ctrl.update]
     },
     {
         url: '/api/users/:user_id',
         method: 'delete',
-        func: user_ctrl.delete
+        func: [user_ctrl.load_by_id,user_ctrl.delete]
     },
     {
         url: '/api/users/:user_id/roles',

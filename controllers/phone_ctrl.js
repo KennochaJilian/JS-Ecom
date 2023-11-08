@@ -4,7 +4,7 @@ module.exports = {
     get_all(req, res) {
         try {
             let whereClause = {
-                userId: req.user.id
+                userId: req.requestedUser.id
             };
             if (req.query.label) {
                 whereClause.label = req.query.label;
@@ -24,10 +24,10 @@ module.exports = {
     },
 
     async get(req, res) {
-            if(!req.user){
+            if(!req.requestedUser){
                 res.status(404).send('User not found');
             }
-            const addresses = await req.user.getPhones();
+            const addresses = await req.requestedUser.getPhones();
             res.status(200).send(addresses)
 
     },
@@ -38,7 +38,7 @@ module.exports = {
                 res.status(404).json('User not found');
             }
             const phone = await db.Phone.create(req.body)
-            await req.user.addPhones(phone);
+            await req.requestedUser.addPhones(phone);
 
             res.status(201).json(phone);
         } catch (error) {
@@ -50,12 +50,12 @@ module.exports = {
         try {
             const [updated] = await db.Phone.update(req.body, {
                 where: {
-                    UserId: req.user.id,
+                    UserId: req.requestedUser.id,
                     id: req.params.phone_id,
                 }
             });
             if (updated) {
-                const phone = await db.Phone.findByPk(req.user.id);
+                const phone = await db.Phone.findByPk(req.requestedUser.id);
                 res.status(200).json(phone);
             } else {
                 res.status(404).send('Phone not found');
@@ -69,7 +69,7 @@ module.exports = {
         try {
             const deleted = await db.Phone.destroy({
                 where: {
-                    UserId: req.user.id,
+                    UserId: req.requestedUser.id,
                     id: req.params.phone_id,
                 }
             });

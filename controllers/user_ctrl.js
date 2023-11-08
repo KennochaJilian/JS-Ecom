@@ -14,7 +14,6 @@ module.exports  = {
 
     async get(req, res) {
         try {
-            console.log(req.params.user_id)
             const user = await db.User.findByPk(req.params.user_id);
             if (user) {
                 res.status(200).json(user);
@@ -36,6 +35,14 @@ module.exports  = {
     },
 
     async update(req, res) {
+        if(!req.user || !req.requestedUser){
+            res.status(404).send('User not found');
+        }
+
+        if(req.user.id !== req.requestedUser.id){
+            res.status(401).send('You should not paaaass');
+
+        }
         try {
             const [updated] = await db.User.update(req.body, {
                 where: {
@@ -55,13 +62,21 @@ module.exports  = {
 
     async delete(req, res) {
         try {
+            if(!req.user || !req.requestedUser){
+                res.status(404).send('User not found');
+            }
+
+            if(req.user.id !== req.requestedUser.id){
+                res.status(401).send('You should not paaaass');
+
+            }
             const deleted = await db.User.destroy({
                 where: {
-                    id: req.params.user_id
+                    id: req.requestedUser.id
                 }
             });
             if (deleted) {
-                res.status(200).send(`User ${req.params.user_id} successfully deleted`);
+                res.status(200).send(`User ${req.requestedUser.id} successfully deleted`);
             } else {
                 res.status(404).send('User not found');
             }
@@ -70,7 +85,7 @@ module.exports  = {
         }
     },
     async getRoles(req,res){
-      const roles =  await req.user.getRoles();
+      const roles =  await req.requestedUser.getRoles();
       res.status(200).json(roles);
     },
 
@@ -78,8 +93,8 @@ module.exports  = {
         try {
             const role = await db.Role.findByPk(req.params.role_id);
             if (role) {
-                req.user.addRole(role);
-                res.status(200).json(req.user);
+                req.requestedUser.addRole(role);
+                res.status(200).json(req.requestedUser);
             } else {
                 res.status(404).send('Role not found');
             }
@@ -100,7 +115,6 @@ module.exports  = {
     signIn: async (req, res, next) => {
         try {
             const user = req.body;
-            console.log(user);
             const dbUser = await db.User.findOne({
                 where: {
                     emailAddress: user.emailAddress
@@ -118,7 +132,7 @@ module.exports  = {
     },
     load_by_id: (req, res, next) => {
         db.User.findByPk(req.params.user_id).then(user => {
-            req.user = user;
+            req.requestedUser = user;
             next();
         }).catch(next);
     }
