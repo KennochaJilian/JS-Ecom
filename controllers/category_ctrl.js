@@ -3,7 +3,7 @@ const db = require('../models');
 module.exports  = {
     async get_all(req, res) {
         try {
-            const categories = await db.Category.findAll();
+            const categories = await db.Category.findAll({include: [db.Product, db.Image]});
             res.status(200).json(categories);
         } catch (error) {
             res.status(500).send(error);
@@ -12,7 +12,7 @@ module.exports  = {
 
     async get(req, res) {
         try {
-            const category = await db.Category.findByPk(req.params.category_id);
+            const category = await db.Category.findByPk(req.params.category_id, {include: db.Product});
             if (category) {
                 res.status(200).json(category);
             } else {
@@ -68,13 +68,11 @@ module.exports  = {
     },
     async getProducts(req,res){
         try {
-            const category = await db.Category.findByPk(req.params.category_id);
-            if (category) {
-                const products = await category.getProducts();
-                res.status(200).json(products);
-            } else {
-                res.status(404).send('Product not found');
-            }
+            console.log(req.params.category_id)
+            const products = await db.Product.findAll({include: [db.Category, db.Image], where: {
+                    CategoryId: req.params.category_id
+                }});
+            res.status(200).json(products);
         } catch (error) {
             res.status(500).send(error);
         }

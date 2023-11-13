@@ -8,7 +8,6 @@ module.exports = sequelize => {
             Product.belongsTo(db.Category, {foreignKey: 'CategoryId'})
         };
     }
-
     Product.init({
         name: {
             type: DataTypes.STRING,
