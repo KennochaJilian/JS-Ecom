@@ -7,14 +7,16 @@ const db = require('./models/index')
 const routes = require('./routes/index')
 const { expressjwt: jwt } = require("express-jwt");
 const userMiddleware = require('./middlewares/user')
+const cors = require('cors');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors());
 
-app.use("/api",
-    jwt({ secret: 'private_key', algorithms: ["HS256"] })
-        .unless({ path: [/^\/api\/users\/signIn/, /^\/api\/users\/signup/] })
-);
+// app.use("/api",
+//     jwt({ secret: 'private_key', algorithms: ["HS256"] })
+//         .unless({ path: [/^\/api\/users\/signIn/, /^\/api\/users\/signup/] })
+// );
 app.use("/api", userMiddleware.load_user)
 
 

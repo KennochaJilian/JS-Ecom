@@ -3,7 +3,6 @@ const db = require("../models");
 module.exports = {
     load_user: (req,res, next) => {
         if(!req.auth){
-            console.log("no auth req")
             next();
         }else {
             console.log('je suis ici')

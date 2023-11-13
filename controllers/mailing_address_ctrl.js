@@ -28,14 +28,16 @@ module.exports = {
             if(!req.user){
                 res.status(404).send('User not found');
             }
-            const addresses = await req.requestedUser.getMailingAddresses();
+            const addresses = await req.requestedUser.getMailingAddresses({
+                where : {id: req.params.mailing_address_id}
+            });
             res.status(200).send(addresses)
 
     },
 
     async create(req, res) {
         try {
-            if(!req.user){
+            if(!req.requestedUser){
                 res.status(404).json('User not found');
             }
             const addr = await db.MailingAddress.create(req.body)

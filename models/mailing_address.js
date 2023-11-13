@@ -9,7 +9,6 @@ module.exports = sequelize => {
     }
 
     MailingAddress.init({
-        // Model attributes are defined here
         address: {
             type: DataTypes.STRING,
             allowNull: false,

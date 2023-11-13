@@ -9,7 +9,6 @@ module.exports = sequelize => {
     }
 
     Phone.init({
-        // Model attributes are defined here
         phone: {
             type: DataTypes.STRING,
             allowNull: false,

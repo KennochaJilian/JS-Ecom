@@ -114,6 +114,7 @@ module.exports  = {
     },
     signIn: async (req, res, next) => {
         try {
+            console.log("je suis en signin", req.body)
             const user = req.body;
             const dbUser = await db.User.findOne({
                 where: {
