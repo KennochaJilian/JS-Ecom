@@ -1,10 +1,29 @@
 const db = require('../models');
 const logicService = require('../services/product_logic_service');
+const { Op } = require('sequelize');
 
 module.exports  = {
     async get_all(req, res) {
         try {
-            const products = await db.Product.findAll({include: [db.Category, db.Image]});
+            let where = {};
+            if (req.query.search) {
+                where[Op.or] = [
+                    {
+                        name: {
+                            [Op.like]: `%${req.query.search}%`
+                        }
+                    },
+                    {
+                        description: {
+                            [Op.like]: `%${req.query.search}%`
+                        }
+                    },
+                ];
+            }
+            const products = await db.Product.findAll({
+                include: [db.Category, db.Image],
+                where
+            });
             res.status(200).json(products);
         } catch (error) {
             res.status(500).send(error);
