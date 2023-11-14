@@ -114,12 +114,12 @@ module.exports  = {
     },
     signIn: async (req, res, next) => {
         try {
-            console.log("je suis en signin", req.body)
             const user = req.body;
             const dbUser = await db.User.findOne({
                 where: {
                     emailAddress: user.emailAddress
-                }
+                },
+                include: [db.Role]
             })
             if(!dbUser){
                 res.status(401).send('User not found')
@@ -129,7 +129,11 @@ module.exports  = {
                 res.status(401).json("Wrong password or email")
             }
             const token = jwt.sign(dbUser)
-            res.status(200).json(token);
+            const response = {
+                token,
+                user : dbUser
+            }
+            res.status(200).json(response);
         } catch (error) {
             res.status(500).send(error);
         }

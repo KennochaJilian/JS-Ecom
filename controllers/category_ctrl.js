@@ -3,7 +3,7 @@ const db = require('../models');
 module.exports  = {
     async get_all(req, res) {
         try {
-            const categories = await db.Category.findAll({include: [db.Product, db.Image]});
+            const categories = await db.Category.findAll({include: db.Product});
             res.status(200).json(categories);
         } catch (error) {
             res.status(500).send(error);
@@ -68,7 +68,6 @@ module.exports  = {
     },
     async getProducts(req,res){
         try {
-            console.log(req.params.category_id)
             const products = await db.Product.findAll({include: [db.Category, db.Image], where: {
                     CategoryId: req.params.category_id
                 }});
