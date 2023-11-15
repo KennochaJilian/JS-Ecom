@@ -139,6 +139,7 @@ module.exports  = {
         }
     },
     load_by_id: (req, res, next) => {
+        console.log(req.params.user_id)
         db.User.findByPk(req.params.user_id).then(user => {
             req.requestedUser = user;
             next();

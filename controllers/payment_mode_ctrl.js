@@ -47,7 +47,7 @@ module.exports = {
             const [updated] = await db.PaymentMethod.update(req.body, {
                 where: {
                     UserId: req.requestedUser.id,
-                    id: req.params.payment_method_id,
+                    id: req.params.payment_method,
                 }
             });
             if (updated) {
@@ -57,6 +57,7 @@ module.exports = {
                 res.status(404).send('PaymentMethod not found');
             }
         } catch (error) {
+            console.log(error)
             res.status(500).send(error);
         }
     },

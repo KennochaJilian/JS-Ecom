@@ -17,9 +17,6 @@ module.exports = sequelize => {
             cardNumber: {
                 type: DataTypes.NUMBER(16),
                 allowNull: false,
-                validate: {
-                    isCreditCard: true
-                }
             },
             expirationDate: {
                 type: DataTypes.DATE,
