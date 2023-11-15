@@ -48,4 +48,5 @@ module.exports = [
         func: [user_ctrl.load_by_id, user_ctrl.addRole]
     }
 
+
 ];

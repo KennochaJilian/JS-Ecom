@@ -5,7 +5,8 @@ module.exports = sequelize => {
     class Product extends Sequelize.Model {
         static associate(db) {
             Product.hasMany(db.Image, {onDelete: 'CASCADE'});
-            Product.belongsTo(db.Category, {foreignKey: 'CategoryId'})
+            Product.belongsTo(db.Category, {foreignKey: 'CategoryId'});
+            Product.belongsToMany(db.Cart, {through: 'Product_Cart'})
         };
     }
     Product.init({

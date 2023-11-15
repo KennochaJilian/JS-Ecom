@@ -9,6 +9,7 @@ module.exports = sequelize => {
             User.hasMany(db.PaymentMethod, {onDelete: 'CASCADE'});
             User.hasMany(db.Phone, {onDelete: 'CASCADE'});
             User.belongsToMany(db.Role, {through: 'Users_Roles'})
+            User.hasOne(db.Cart);
         };
         toJSON () {
             // hide protected fields
